@@ -16,4 +16,8 @@ module Cards
     end
     @card_pack
   end
+
+  def shuffle_pack(pack)
+    pack.shuffle
+  end
 end
