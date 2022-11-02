@@ -20,4 +20,12 @@ module Cards
   def shuffle_pack(pack)
     pack.shuffle
   end
+
+  def distribute_cards(pack)
+    pack.pop(2)
+  end
+
+  def give_card(pack)
+    pack.pop
+  end
 end
