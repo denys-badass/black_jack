@@ -8,8 +8,13 @@ class Player
     @hand_cards = []
   end
 
-  def player_point(hand_cards)
-    puts hand_cards.select(&:cost)
+  def points
+    sum = 0
+    hand_cards.each { |card| sum += card.cost }
+    if sum > 21 && hand_cards.select { |card| card.value == "A" }
+      sum -= 10
+    end
+    sum
   end
 
   def blind(cost)

@@ -28,6 +28,7 @@ module Interface
     money_menu
     player_info(@diler)
     player_info(@user)
+    show_points(@user)
   end
 
   def player_info(player)
@@ -47,6 +48,6 @@ module Interface
   end
 
   def show_points(player)
-    
+    puts "#{player.name} has #{player.points} points"
   end
 end
