@@ -11,7 +11,7 @@ class Player
   def points
     sum = 0
     hand_cards.each { |card| sum += card.cost }
-    if sum > 21 && hand_cards.select { |card| card.value == "A" }
+    if sum > 21 && !hand_cards.select { |card| card.value == "A" }.empty?
       sum -= 10
     end
     sum
