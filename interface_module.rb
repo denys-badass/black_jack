@@ -1,4 +1,4 @@
-class Interface
+module Interface
   def welcome_start
     puts "WELCOME TO BLACK JACK GAME"
     puts "=" * 30
