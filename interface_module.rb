@@ -25,9 +25,28 @@ module Interface
   end
 
   def display_game
-    # show play info about diler
-    # show info about bank
-    # show play info about user
-    # show actions
+    money_menu
+    player_info(@diler)
+    player_info(@user)
+  end
+
+  def player_info(player)
+    puts "=" * 30
+    print "#{player.name} cards: "
+    player.name == "Diler" ? show_cards(player, :close) : show_cards(player, :open)
+  end
+
+  def close_diler_cards
+    puts "* " * diler.hand_cards.size
+  end
+
+  def show_cards(player, param)
+    puts "* " * player.hand_cards.size if param == :close
+    player.hand_cards.each { |card| print "#{card.value}#{card.suite} " } if param == :open
+    puts
+  end
+
+  def show_points(player)
+    
   end
 end

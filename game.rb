@@ -20,6 +20,11 @@ class Game
   end
 
   def play_game
-    @bank = user.blind(10) + diler.blind(10)
+    @bank = @user.blind(10) + @diler.blind(10)
+    2.times do
+      @user.hand_cards << give_card(card_pack)
+      @diler.hand_cards << give_card(card_pack)
+    end
+    display_game
   end
 end
