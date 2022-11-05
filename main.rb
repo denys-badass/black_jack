@@ -1,3 +1,3 @@
-require_relative "interface"
+require_relative "game"
 
-Interface.new.welcome_start
+Game.new.play

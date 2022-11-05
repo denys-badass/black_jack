@@ -4,19 +4,24 @@ module Interface
     puts "=" * 30
     print "Enter your name: "
     name = gets.chomp
-    # call create user
-    # call create diler
-    # call start game method
   end
 
-  def start_menu(user, diler)
+  def money_menu
+    puts "=" * 30
+    puts "Diler has $#{@diler.money}"
+    puts "#{@user.name} has $#{@user.money}"
+    puts "Bank has $#{@bank}"
+  end
+
+  def start_game_menu
     menu = {
-      play: # play_round_method,
-      exit: # exit
+      1 => {:title => "Play", :method => :play_game},
+      2 => {:title => "Exit", :method => :exit_game}
     }
-    # show info about user
-    # show info about diler
-    # choice method call
+    puts "=" * 30
+    puts "What do you want to do?: "
+    menu.each { |key, value| puts "#{key} - #{value[:title]}" }
+    send(menu[gets.to_i][:method])
   end
 
   def display_game
