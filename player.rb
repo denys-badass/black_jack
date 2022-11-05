@@ -11,4 +11,9 @@ class Player
   def player_point(hand_cards)
     puts hand_cards.select(&:cost)
   end
+
+  def blind(cost)
+    self.money -= cost
+    cost
+  end
 end

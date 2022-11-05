@@ -14,8 +14,12 @@ class Game
     @bank = 0
   end
 
-  def play
+  def first_start
     money_menu
     start_game_menu
+  end
+
+  def play_game
+    @bank = user.blind(10) + diler.blind(10)
   end
 end
