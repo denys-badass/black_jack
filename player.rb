@@ -1,9 +1,10 @@
 class Player
-  attr_accessor :money, :hand_cards
+  attr_accessor :money, :hand_cards, :points
   attr_reader :name
 
   def initialize(name)
     @name = name
+    validate!
     @money = 100
     @hand_cards = []
   end
@@ -20,5 +21,9 @@ class Player
   def blind(cost)
     self.money -= cost
     cost
+  end
+
+  def validate!
+    raise "Name can`t be an empty" if name.empty?
   end
 end

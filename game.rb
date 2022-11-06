@@ -10,85 +10,121 @@ class Game
   def initialize
     @user = Player.new(welcome_start)
     @diler = Player.new("Diler")
+    @bank = 0
+  rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
-  def first_start
-    money_menu
-    start_game_menu
-  end
-
-  def game_round
-    loop do
-      finish_game if @diler.hand_cards.size == 3 && @user.hand_cards.size == 3
-      results if @user.points > 21
-    
-      display_game
-      action_menu
+  def play
+    @break_flag = false
+    while (@user.money > 0 && @diler.money > 0) || !@break_flag
+      break if @break_flag
+      show_money
+      start_game_menu
     end
+    exit_game
   end
 
-  def play_game
+  def pre_round
+    clear_hand_card
     @card_pack = shuffle_pack(fill_card_pack)
-    @user.hand_cards.clear
-    @diler.hand_cards.clear
-    @bank = @user.blind(10) + @diler.blind(10)
+    blind
     2.times do
       @user.hand_cards << give_card(card_pack)
       @diler.hand_cards << give_card(card_pack)
     end
-    game_round
+    round
+  end
+
+  def round
+    show_money
+    show_cards(@diler, :close)
+    show_cards(@user, :open)
+    show_points(@user)
+    if @user.points > 21
+      player_win(@diler)
+    elsif @user.hand_cards.size == 3 && @diler.hand_cards.size == 3
+      open_cards
+    else
+      action_menu
+    end
+    rescue RuntimeError => e
+      puts e.message
+      retry
+  end
+
+  def clear_hand_card
+    @user.hand_cards.clear
+    @diler.hand_cards.clear
+  end
+
+  def blind
+    @bank = @user.blind(10) + @diler.blind(10)
   end
 
   def start_game_menu
     case show_menu(START_GAME_MENU)
-    when 1 then play_game
-    when 2 then exit_game
+    when 1 then pre_round
+    when 2 then @break_flag = true
     end
-  end
-
-  def display_game
-    money_menu
-    show_cards(@diler, :close)
-    show_cards(@user, :open)
-    show_points(@user)
   end
 
   def action_menu
     case show_menu(ACTION_MENU)
     when 1 then diler_game
     when 2 then add_card(@user)
-    when 3 then finish_game
+    when 3 then open_cards
+    else
+      raise "Wrong Choice"
     end
   end
 
   def diler_game
     add_card(@diler) if @diler.points < 17
+    round
   end
 
   def add_card(player)
-    player.hand_cards << give_card(@card_pack)
+    player.hand_cards << give_card(@card_pack) if player.hand_cards.size == 2
     diler_game unless player.name == "Diler"
   end
 
-  def finish_game
-    money_menu
+  def open_cards
+    show_money
     show_cards(@diler, :open)
     show_points(@diler)
     show_cards(@user, :open)
     show_points(@user)
     results
-    start_game_menu
   end
 
   def results
-    user_result = 21 % @user.points
-    diler_result = 21 % @diler.points
-    if user_result < diler_result
+    return if draw? || overkill
+    user_result = 21 - @user.points
+    diler_result = 21 - @diler.points
+    if user_result < diler_result # || blackjack?(@user)
       player_win(@user)
-    elsif diler_result < user_result
+    elsif diler_result < user_result # || blackjack?(@diler)
       player_win(@diler)
     else
       draw
+    end
+  end
+
+  def draw?
+    draw if @user.points > 21 && @diler.points > 21 || @user.points == @diler.points
+  end
+
+  def blackjack?(player)
+    player.points == 21
+  end
+
+  def overkill
+    if @user.points > 21
+      player_win(@diler)
+    elsif @diler.points > 21
+      player_win(@user)
     end
   end
 end

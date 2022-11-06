@@ -1,3 +1,3 @@
 require_relative "game"
 
-Game.new.first_start
+Game.new.play

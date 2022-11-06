@@ -10,7 +10,7 @@ module Interface
     name = gets.chomp
   end
 
-  def money_menu
+  def show_money
     puts "=" * 30
     puts "Diler has $#{@diler.money}"
     puts "#{@user.name} has $#{@user.money}"
@@ -37,6 +37,7 @@ module Interface
   end
 
   def draw
+    puts "=" * 30
     puts "It`s Draw"
     puts "#{@user.name} get $#{@bank / 2}"
     @user.money += @bank / 2
@@ -46,8 +47,14 @@ module Interface
   end
 
   def player_win(player)
+    puts "=" * 30
     puts "#{player.name} win $#{@bank}"
     player.money += @bank
     @bank = 0
+  end
+
+  def exit_game
+    puts "GAME OVER"
+    puts "We will wait you!!!"
   end
 end
