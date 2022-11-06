@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :money, :hand_cards, :points
+  attr_accessor :money, :hand_cards
   attr_reader :name
 
   def initialize(name)
@@ -12,8 +12,8 @@ class Player
   def points
     sum = 0
     hand_cards.each { |card| sum += card.cost }
-    if sum > 21 && !hand_cards.select { |card| card.value == "A" }.empty?
-      sum -= 10
+    unless hand_cards.select { |card| card.value == "A" }.empty?
+      sum -= 10 if sum > 21
     end
     sum
   end

@@ -1,7 +1,7 @@
-require_relative 'interface_module'
-require_relative 'player'
-require_relative 'cards_module'
-require_relative 'card'
+require "./modules/interface"
+require "./modules/cards"
+require_relative "player"
+require_relative "card"
 
 class Game
   include Interface
@@ -18,8 +18,9 @@ class Game
 
   def play
     @break_flag = false
-    while (@user.money > 0 && @diler.money > 0) || !@break_flag
+    while (@user.money.positive? && @diler.money.positive?) || !@break_flag
       break if @break_flag
+
       show_money
       start_game_menu
     end
@@ -39,9 +40,7 @@ class Game
 
   def round
     show_money
-    show_cards(@diler, :close)
-    show_cards(@user, :open)
-    show_points(@user)
+    show_desk(:close)
     if @user.points > 21
       player_win(@diler)
     elsif @user.hand_cards.size == 3 && @diler.hand_cards.size == 3
@@ -49,9 +48,6 @@ class Game
     else
       action_menu
     end
-    rescue RuntimeError => e
-      puts e.message
-      retry
   end
 
   def clear_hand_card
@@ -78,6 +74,9 @@ class Game
     else
       raise "Wrong Choice"
     end
+  rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
   def diler_game
@@ -90,22 +89,14 @@ class Game
     diler_game unless player.name == "Diler"
   end
 
-  def open_cards
-    show_money
-    show_cards(@diler, :open)
-    show_points(@diler)
-    show_cards(@user, :open)
-    show_points(@user)
-    results
-  end
-
   def results
     return if draw? || overkill
+
     user_result = 21 - @user.points
     diler_result = 21 - @diler.points
-    if user_result < diler_result # || blackjack?(@user)
+    if user_result < diler_result
       player_win(@user)
-    elsif diler_result < user_result # || blackjack?(@diler)
+    elsif diler_result < user_result
       player_win(@diler)
     else
       draw

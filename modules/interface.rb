@@ -1,5 +1,4 @@
 module Interface
-
   START_GAME_MENU = {1 => "Play", 2 => "Exit"}.freeze
   ACTION_MENU = {1 => "Skip", 2 => "Add card", 3 => "Open cards"}.freeze
 
@@ -7,7 +6,20 @@ module Interface
     puts "WELCOME TO BLACK JACK GAME"
     puts "=" * 30
     print "Enter your name: "
-    name = gets.chomp
+    gets.chomp
+  end
+
+  def show_desk(param)
+    show_cards(@diler, param)
+    show_points(@diler) if param == :open
+    show_cards(@user, :open)
+    show_points(@user)
+  end
+
+  def open_cards
+    show_money
+    show_desk(:open)
+    results
   end
 
   def show_money
