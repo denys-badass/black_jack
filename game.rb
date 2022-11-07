@@ -6,6 +6,8 @@ require_relative "card"
 class Game
   include Interface
   include Cards
+  
+  BLACK_JACK_POINT = 21
 
   def initialize
     @user = Player.new(welcome_start)
@@ -41,7 +43,7 @@ class Game
   def round
     show_money
     show_desk(:close)
-    if @user.points > 21
+    if @user.points > BLACK_JACK_POINT
       player_win(@diler)
     elsif @user.hand_cards.size == 3 && @diler.hand_cards.size == 3
       open_cards
@@ -92,8 +94,8 @@ class Game
   def results
     return if draw? || overkill
 
-    user_result = 21 - @user.points
-    diler_result = 21 - @diler.points
+    user_result = BLACK_JACK_POINT - @user.points
+    diler_result = BLACK_JACK_POINT - @diler.points
     if user_result < diler_result
       player_win(@user)
     elsif diler_result < user_result
@@ -104,17 +106,17 @@ class Game
   end
 
   def draw?
-    draw if @user.points > 21 && @diler.points > 21 || @user.points == @diler.points
+    draw if @user.points > BLACK_JACK_POINT && @diler.points > BLACK_JACK_POINT || @user.points == @diler.points
   end
 
   def blackjack?(player)
-    player.points == 21
+    player.points == BLACK_JACK_POINT
   end
 
   def overkill
-    if @user.points > 21
+    if @user.points > BLACK_JACK_POINT
       player_win(@diler)
-    elsif @diler.points > 21
+    elsif @diler.points > BLACK_JACK_POINT
       player_win(@user)
     end
   end
